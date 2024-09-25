@@ -31,7 +31,7 @@ const componentStyle = computed(() => {
   <div class="transaction-info" :style="[componentStyle, { overflowX: 'auto' }]">
     <v-expansion-panels>
       <v-expansion-panel>
-        <v-expansion-panel-title focusable=true>
+        <v-expansion-panel-title focusable="true">
           <span style="user-select: all">Transaction id: {{ transactionData.txid }}</span>
         </v-expansion-panel-title>
         <v-expansion-panel-text>
@@ -51,11 +51,11 @@ const componentStyle = computed(() => {
               </v-col>
             </v-row>
             <h4>Inputs</h4>
-            <ul style="list-style-type: none;">
+            <ul style="list-style-type: none">
               <li v-for="(input, index) in transactionData.vin" :key="index">
                 <v-expansion-panels>
                   <v-expansion-panel>
-                    <v-expansion-panel-title focusable=true>
+                    <v-expansion-panel-title focusable="true">
                       <p>Transaction id: {{ input.txid }}</p>
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
@@ -80,14 +80,12 @@ const componentStyle = computed(() => {
                       </div>
                       <v-expansion-panels v-if="input.witness && input.witness.length > 0">
                         <v-expansion-panel>
-                          <v-expansion-panel-title focusable=true>
+                          <v-expansion-panel-title focusable="true">
                             Raw witness
                           </v-expansion-panel-title>
                           <v-expansion-panel-text>
-                            <div
-                              class="witness-box"
-                            >
-                              <ul style="list-style-type: none;">
+                            <div class="witness-box">
+                              <ul style="list-style-type: none">
                                 <li v-for="(item, wIndex) in input.witness" :key="wIndex">
                                   <code>{{ item === '' ? '00' : item }}</code>
                                 </li>

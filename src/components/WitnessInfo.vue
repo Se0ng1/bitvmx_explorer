@@ -28,12 +28,12 @@ const processWitness = () => {
   let init = []
   let end = []
   let index = 0
-  while (index < witness.length && witness[index].length === 128 ) {
+  while (index < witness.length && witness[index].length === 128) {
     init.push(witness[index])
     index += 1
   }
   index = witness.length - 1
-  while (index >= 0 && witness[index].length === 128 ) {
+  while (index >= 0 && witness[index].length === 128) {
     end.unshift(witness[index])
     index -= 1
   }
@@ -59,40 +59,49 @@ const showPublicKeysDialog = () => {
 <template>
   <v-expansion-panels>
     <v-expansion-panel>
-      <v-expansion-panel-title focusable=true> Witness Information <v-spacer></v-spacer><v-btn color="primary" @click.stop="showDialog">Code</v-btn><v-btn color="primary" @click.stop="showPublicKeysDialog" class="public-keys-button">Public keys</v-btn> </v-expansion-panel-title>
+      <v-expansion-panel-title focusable="true">
+        Witness Information <v-spacer></v-spacer
+        ><v-btn color="primary" @click.stop="showDialog">Code</v-btn
+        ><v-btn color="primary" @click.stop="showPublicKeysDialog" class="public-keys-button"
+          >Public keys</v-btn
+        >
+      </v-expansion-panel-title>
       <v-expansion-panel-text>
         <ul>
-          <li v-for="(item, index) in decryptWinternitzWitness(winternitzValues, code)" :key="index">
-            {{ item.value }} <span style="color: grey; font-size: smaller;">{{ item.hash }}</span>
+          <li
+            v-for="(item, index) in decryptWinternitzWitness(winternitzValues, code)"
+            :key="index"
+          >
+            {{ item.value }} <span style="color: grey; font-size: smaller">{{ item.hash }}</span>
           </li>
         </ul>
       </v-expansion-panel-text>
     </v-expansion-panel>
   </v-expansion-panels>
   <v-dialog v-model="dialog" max-width="500">
-          <v-card>
-            <v-card-title>Bitcoin script binary code</v-card-title>
-            <v-card-text>{{ code }}</v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="flat" @click="dialog = false">Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-        <v-dialog v-model="publicKeysDialog" max-width="500">
-          <v-card>
-            <v-card-title>Public keys</v-card-title>
-            <v-card-text>
-              <ul>
-                <li v-for="(signature, index) in publicKeys" :key="index">{{ signature }}</li>
-              </ul>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="primary" variant="flat" @click="publicKeysDialog = false">Close</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+    <v-card>
+      <v-card-title>Bitcoin script binary code</v-card-title>
+      <v-card-text>{{ code }}</v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" variant="flat" @click="dialog = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+  <v-dialog v-model="publicKeysDialog" max-width="500">
+    <v-card>
+      <v-card-title>Public keys</v-card-title>
+      <v-card-text>
+        <ul>
+          <li v-for="(signature, index) in publicKeys" :key="index">{{ signature }}</li>
+        </ul>
+      </v-card-text>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" variant="flat" @click="publicKeysDialog = false">Close</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <style scoped>

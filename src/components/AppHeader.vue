@@ -1,6 +1,6 @@
 <template>
   <v-app-bar>
-    <img src="@/assets/bitvmx.jpg" alt="BitVMX Logo" class="logo">
+    <img src="@/assets/bitvmx.jpg" alt="BitVMX Logo" class="logo" />
     <v-toolbar-title>BitVMX explorer</v-toolbar-title>
     <v-spacer></v-spacer>
     <div class="nav-links">
@@ -8,7 +8,7 @@
       <RouterLink to="/protocol">Protocol</RouterLink>
     </div>
     <div class="nav-dark-toggle">
-        <DarkModeToggle />
+      <DarkModeToggle />
     </div>
   </v-app-bar>
 </template>
@@ -21,7 +21,7 @@ import DarkModeToggle from './DarkModeToggle.vue'
 .nav-dark-toggle
   margin-right: 10px
   display: flex
-  
+
 .v-app-bar
   background-color: rgba(var(--v-theme-background), 0.8)
   color: var(--v-theme-on-background)
@@ -44,4 +44,8 @@ import DarkModeToggle from './DarkModeToggle.vue'
     font-weight: 500
     &:hover
       color: rgba(25, 118, 210, 1)
+
+.network-dropdown
+  margin-left: 10px
+  margin-right: 10px
 </style>

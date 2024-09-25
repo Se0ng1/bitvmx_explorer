@@ -1,9 +1,11 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue' // Added watch import
 import { fetchProtocolData } from '@/lib/transactions'
 import { useTransactionStore } from '@/stores/transactions'
+import { useNetworkStore } from '@/stores/network' // Import the network store
 
 const transactionStore = useTransactionStore()
+const networkStore = useNetworkStore() // Access the network store
 const inputValue = ref(transactionStore.txId) // Initialize with the store value
 const errorMessage = ref('')
 const emit = defineEmits(['submit'])
@@ -30,13 +32,18 @@ const handleSubmit = async () => {
   }
 }
 
+// Keep the onMounted behavior
 onMounted(() => {
-  // Load the transaction ID from the store on mount
-  inputValue.value = transactionStore.txId
-  if (isValidTxId(inputValue.value)) {
-    handleSubmit() // Automatically submit if a valid transaction ID exists
-  }
+  inputValue.value = transactionStore.txId // Set inputValue to the transaction ID on mount
 })
+
+// Watch for network changes and reset txId
+watch(
+  () => networkStore.networkId,
+  () => {
+    transactionStore.setTxId('') // Clear the transaction ID when network changes
+  }
+)
 </script>
 
 <template>
