@@ -9,8 +9,9 @@ const props = defineProps({
   },
   position: {
     type: Number,
-    required: true,
-    validator: (value) => value === 0 || value === 1
+    required: false,
+    default: null,
+    validator: (value) => value === 0 || value === 1 || value === null
   }
 })
 
@@ -23,7 +24,11 @@ const processedWitness = (input) => {
 }
 
 const componentStyle = computed(() => {
-  return props.position === 0 ? { marginRight: '60px' } : { marginLeft: '60px' }
+  return props.position === null
+    ? { backgroundColor: 'primary' }
+    : props.position === 0
+      ? { marginRight: '60px', backgroundColor: 'primary' }
+      : { marginLeft: '60px', backgroundColor: 'secondary' }
 })
 </script>
 

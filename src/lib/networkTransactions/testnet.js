@@ -8,6 +8,7 @@ export const fetchTransactionData = async (txid) => {
       Accept: 'application/json, text/plain, */*'
     }
   })
+  await new Promise((resolve) => setTimeout(resolve, 100))
   return response.data
 }
 
@@ -17,5 +18,6 @@ export const fetchAddressData = async (txid, address) => {
       Accept: 'application/json, text/plain, */*'
     }
   })
+  await new Promise((resolve) => setTimeout(resolve, 100))
   return response.data.filter((item) => item.vin[0].txid === txid)[0] || null
 }

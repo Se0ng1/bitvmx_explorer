@@ -16,12 +16,18 @@
     </v-row>
     <ProtocolInput @submit="handleProtocolSubmit" />
     <TransactionInfo
-      v-for="(transaction, index) in transactionData"
-      :key="index"
-      :transactionData="transaction"
-      :position="index % 2"
       v-if="transactionData && transactionData.length > 0"
+      :transactionData="transactionData[0]"
+      :position="null"
     />
+    <template v-if="transactionData && transactionData.length > 0">
+      <TransactionInfo
+        v-for="(transaction, index) in transactionData.slice(1)"
+        :key="index"
+        :transactionData="transaction"
+        :position="index % 2"
+      />
+    </template>
   </div>
 </template>
 

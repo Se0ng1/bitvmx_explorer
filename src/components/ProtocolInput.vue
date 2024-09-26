@@ -8,6 +8,7 @@ const transactionStore = useTransactionStore()
 const networkStore = useNetworkStore() // Access the network store
 const inputValue = ref(transactionStore.txId) // Initialize with the store value
 const errorMessage = ref('')
+const isLoading = ref(false) // Loading state
 const emit = defineEmits(['submit'])
 
 const isValidTxId = (txid) => {
@@ -17,6 +18,7 @@ const isValidTxId = (txid) => {
 
 const handleSubmit = async () => {
   if (isValidTxId(inputValue.value)) {
+    isLoading.value = true // Set loading to true
     try {
       const transactions = await fetchProtocolData(inputValue.value)
       emit('submit', transactions)
@@ -25,6 +27,8 @@ const handleSubmit = async () => {
     } catch (error) {
       errorMessage.value = error.message
       emit('submit', null)
+    } finally {
+      isLoading.value = false // Reset loading state
     }
   } else {
     errorMessage.value = 'Invalid Bitcoin transaction ID format'
@@ -55,10 +59,18 @@ watch(
     />
     <v-btn @click="handleSubmit" color="primary">Submit</v-btn>
     <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+    <div v-if="isLoading" class="d-flex justify-center">
+      <v-progress-circular indeterminate color="primary" size="64"></v-progress-circular>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.v-progress-circular {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
 .protocol-input {
   display: flex;
   flex-direction: column;
