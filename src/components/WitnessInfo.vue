@@ -14,7 +14,7 @@ const code = ref('')
 const controlBlock = ref()
 const winternitzValues = ref([])
 const dialog = ref(false)
-const publicKeysDialog = ref(false)
+const signaturesDialog = ref(false)
 
 onMounted(() => {
   processWitness()
@@ -38,10 +38,10 @@ const processWitness = () => {
     index -= 1
   }
   if (init.length > end.length) {
-    publicKeys.value = init
+    signatures.value = init
     witness = witness.slice(init.length, witness.length)
   } else {
-    publicKeys.value = end
+    signatures.value = end
     witness = witness.slice(0, witness.length - 1 - end.length)
   }
   winternitzValues.value = witness
@@ -51,8 +51,8 @@ const showDialog = () => {
   dialog.value = true
 }
 
-const showPublicKeysDialog = () => {
-  publicKeysDialog.value = true
+const showSignaturesDialog = () => {
+  signaturesDialog.value = true
 }
 </script>
 
@@ -62,8 +62,8 @@ const showPublicKeysDialog = () => {
       <v-expansion-panel-title focusable="true">
         Witness Information <v-spacer></v-spacer
         ><v-btn color="primary" @click.stop="showDialog">Code</v-btn
-        ><v-btn color="primary" @click.stop="showPublicKeysDialog" class="public-keys-button"
-          >Public keys</v-btn
+        ><v-btn color="primary" @click.stop="showSignaturesDialog" class="signatures-button"
+          >Signatures</v-btn
         >
       </v-expansion-panel-title>
       <v-expansion-panel-text>
@@ -88,17 +88,17 @@ const showPublicKeysDialog = () => {
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-dialog v-model="publicKeysDialog" max-width="500">
+  <v-dialog v-model="signaturesDialog" max-width="500">
     <v-card>
-      <v-card-title>Public keys</v-card-title>
+      <v-card-title>Signatures</v-card-title>
       <v-card-text>
         <ul>
-          <li v-for="(signature, index) in publicKeys" :key="index">{{ signature }}</li>
+          <li v-for="(signature, index) in signatures" :key="index">{{ signature }}</li>
         </ul>
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="primary" variant="flat" @click="publicKeysDialog = false">Close</v-btn>
+        <v-btn color="primary" variant="flat" @click="signaturesDialog = false">Close</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -109,7 +109,7 @@ const showPublicKeysDialog = () => {
   margin-top: 15px;
   margin-bottom: 15px;
 }
-.public-keys-button {
+.signatures-button {
   margin-left: 20px;
   margin-right: 20px;
 }
