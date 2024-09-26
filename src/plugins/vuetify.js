@@ -10,38 +10,29 @@ import 'vuetify/styles'
 
 // Composables
 import { createVuetify } from 'vuetify'
+import colors from 'vuetify/util/colors'
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 export default createVuetify({
   theme: {
-    defaultTheme: 'light'
-    /*themes: {
+    defaultTheme: 'light',
+    themes: {
       light: {
         dark: false,
         colors: {
-          background: '#FFFFFF',
-          surface: '#FFFFFF',
-          primary: '#6200EE',
-          secondary: '#03DAC6',
-          error: '#B00020',
-          info: '#2196F3',
-          success: '#4CAF50',
-          warning: '#FB8C00'
+          prover_background: colors.lightGreen.lighten4,
+          verifier_background: colors.blue.lighten4,
+          funding_background: colors.amber.lighten4
         }
       },
       dark: {
         dark: true,
         colors: {
-          background: '#121212',
-          surface: '#121212',
-          primary: '#BB86FC',
-          secondary: '#03DAC6',
-          error: '#CF6679',
-          info: '#2196F3',
-          success: '#4CAF50',
-          warning: '#FB8C00'
+          prover_background: colors.lightGreen.lighten2,
+          verifier_background: colors.blue.lighten2,
+          funding_background: colors.amber.darken4
         }
       }
-    }*/
+    }
   }
 })

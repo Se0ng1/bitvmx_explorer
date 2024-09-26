@@ -9,7 +9,7 @@ const networkStore = useNetworkStore() // Access the network store
 const inputValue = ref(transactionStore.txId) // Initialize with the store value
 const errorMessage = ref('')
 const isLoading = ref(false) // Loading state
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submit', 'clear']) // Added 'clear' event
 
 const isValidTxId = (txid) => {
   const txidRegex = /^[a-fA-F0-9]{64}$/
@@ -17,6 +17,7 @@ const isValidTxId = (txid) => {
 }
 
 const handleSubmit = async () => {
+  emit('clear') // Emit clear event to reset transactionData
   if (isValidTxId(inputValue.value)) {
     isLoading.value = true // Set loading to true
     try {
@@ -83,6 +84,6 @@ input {
 }
 
 .error-message {
-  color: red;
+  color: rgb(var(--v-theme-error));
 }
 </style>

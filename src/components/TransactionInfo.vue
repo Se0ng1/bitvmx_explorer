@@ -24,16 +24,18 @@ const processedWitness = (input) => {
 }
 
 const componentStyle = computed(() => {
-  return props.position === null
-    ? { backgroundColor: 'primary' }
-    : props.position === 0
-      ? { marginRight: '60px', backgroundColor: 'primary' }
-      : { marginLeft: '60px', backgroundColor: 'secondary' }
+  const className =
+    props.position === null
+      ? 'funding-transaction'
+      : props.position === 0
+        ? 'prover-transaction'
+        : 'verifier-transaction'
+  return { class: className }
 })
 </script>
 
 <template>
-  <div class="transaction-info" :style="[componentStyle, { overflowX: 'auto' }]">
+  <div class="transaction-info" :class="componentStyle.class" :style="{ overflowX: 'auto' }">
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-title focusable="true">
@@ -120,16 +122,6 @@ const componentStyle = computed(() => {
 </template>
 
 <style scoped>
-.transaction-info {
-  margin-top: 20px;
-  padding: 5px;
-}
-
-.v-expansion-panel {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
 .v-expansion-panel-title {
   overflow-x: auto;
 }
@@ -166,5 +158,25 @@ li {
 .witness-box code {
   font-family: monospace;
   word-break: keep-all;
+}
+
+.transaction-info {
+  padding: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.funding-transaction {
+  background-color: rgb(var(--v-theme-funding_background));
+}
+
+.prover-transaction {
+  margin-right: 60px;
+  background-color: rgb(var(--v-theme-prover_background));
+}
+
+.verifier-transaction {
+  margin-left: 60px;
+  background-color: rgb(var(--v-theme-verifier_background));
 }
 </style>

@@ -14,7 +14,20 @@
         />
       </v-col>
     </v-row>
-    <ProtocolInput @submit="handleProtocolSubmit" />
+    <ProtocolInput @submit="handleProtocolSubmit" @clear="clearTransactionData" />
+    <template v-if="transactionData && transactionData.length > 0">
+      <v-row>
+        <v-col cols="12" md="4">
+          <div class="role-legend role-funding">Funding</div>
+        </v-col>
+        <v-col cols="12" md="4">
+          <div class="role-legend role-prover">Prover</div>
+        </v-col>
+        <v-col cols="12" md="4">
+          <div class="role-legend role-verifier">Verifier</div>
+        </v-col>
+      </v-row>
+    </template>
     <TransactionInfo
       v-if="transactionData && transactionData.length > 0"
       :transactionData="transactionData[0]"
@@ -55,6 +68,10 @@ const handleProtocolSubmit = (data) => {
   transactionData.value = data
 }
 
+const clearTransactionData = () => {
+  transactionData.value = null // Clear transactionData when clear event is emitted
+}
+
 const setNetwork = (network) => {
   networkStore.setNetworkId(network)
   router.go(0)
@@ -65,6 +82,26 @@ const setNetwork = (network) => {
 .protocol {
   margin: 0 auto;
   padding: 20px;
+}
+
+.role-legend {
+  text-align: center;
+  margin: 10px;
+  margin-top: 20px;
+  margin-bottom: 5px;
+  padding: 10px;
+}
+
+.role-funding {
+  background-color: rgb(var(--v-theme-funding_background));
+}
+
+.role-prover {
+  background-color: rgb(var(--v-theme-prover_background));
+}
+
+.role-verifier {
+  background-color: rgb(var(--v-theme-verifier_background));
 }
 
 h1 {
