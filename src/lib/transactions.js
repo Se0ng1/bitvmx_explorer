@@ -1,34 +1,48 @@
-import axios from 'axios'
+import { useNetworkStore } from '../stores/network' // Import the network store
 
-export const fetchTransactionData = async (txid) => {
-  try {
-    const response = await axios.get(`https://mutinynet.com/api/tx/${txid}`, {
-      headers: {
-        Accept: 'application/json, text/plain, */*'
-      }
-    })
-    return response.data // Return the response data
-  } catch (error) {
-    throw new Error('Error fetching transaction data: ' + error.message)
+let fetchTransactionDataAPI
+let fetchAddressDataAPI
+let fetchTransactionURLAPI
+
+const networkStore = useNetworkStore() // Create an instance of the network store
+const currentNetwork = networkStore.networkId // Access the networkId from the store
+
+const loadNetworkFunctions = async () => {
+  if (currentNetwork === 'mainnet') {
+    // Import mainnet functions
+    const mainnet = await import('./networkTransactions/mainnet')
+    fetchTransactionDataAPI = mainnet.fetchTransactionData
+    fetchAddressDataAPI = mainnet.fetchAddressData
+    fetchTransactionURLAPI = mainnet.fetchTransactionURL
+  } else if (currentNetwork === 'testnet') {
+    // Import testnet functions
+    const testnet = await import('./networkTransactions/testnet')
+    fetchTransactionDataAPI = testnet.fetchTransactionData
+    fetchAddressDataAPI = testnet.fetchAddressData
+    fetchTransactionURLAPI = testnet.fetchTransactionURL
+  } else {
+    // Import mutinynet functions
+    const mutinynet = await import('./networkTransactions/mutinynet')
+    fetchTransactionDataAPI = mutinynet.fetchTransactionData
+    fetchAddressDataAPI = mutinynet.fetchAddressData
+    fetchTransactionURLAPI = mutinynet.fetchTransactionURL
   }
 }
 
+await loadNetworkFunctions() // Load the appropriate network functions
+
+export const fetchTransactionData = async (txid) => {
+  // Call the appropriate network implementation
+  return fetchTransactionDataAPI(txid)
+}
+
 export const fetchAddressData = async (txid, address) => {
-  try {
-    const response = await axios.get(`https://mutinynet.com/api/address/${address}/txs`, {
-      headers: {
-        Accept: 'application/json, text/plain, */*'
-      }
-    })
-    const filteredData = response.data.filter((item) => item.vin[0].txid === txid)
-    if (filteredData.length > 0) {
-      return filteredData[0]
-    } else {
-      return null
-    }
-  } catch (error) {
-    throw new Error('Error fetching address data: ' + error.message)
-  }
+  // Call the appropriate network implementation
+  return fetchAddressDataAPI(txid, address)
+}
+
+export const fetchTransactionURL = (txid) => {
+  return fetchTransactionURLAPI(txid)
 }
 
 export const fetchProtocolData = async (txid) => {

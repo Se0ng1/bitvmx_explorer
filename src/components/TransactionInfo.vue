@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import WitnessInfo from './WitnessInfo.vue'
+import { fetchTransactionURL } from '@/lib/transactions'
 
 const props = defineProps({
   transactionData: {
@@ -9,8 +10,9 @@ const props = defineProps({
   },
   position: {
     type: Number,
-    required: true,
-    validator: (value) => value === 0 || value === 1
+    required: false,
+    default: null,
+    validator: (value) => value === 0 || value === 1 || value === null
   }
 })
 
@@ -23,16 +25,29 @@ const processedWitness = (input) => {
 }
 
 const componentStyle = computed(() => {
-  return props.position === 0 ? { marginRight: '60px' } : { marginLeft: '60px' }
+  const className =
+    props.position === null
+      ? 'funding-transaction'
+      : props.position === 0
+        ? 'prover-transaction'
+        : 'verifier-transaction'
+  return { class: className }
 })
 </script>
 
 <template>
-  <div class="transaction-info" :style="[componentStyle, { overflowX: 'auto' }]">
+  <div class="transaction-info" :class="componentStyle.class" :style="{ overflowX: 'auto' }">
     <v-expansion-panels>
       <v-expansion-panel>
-        <v-expansion-panel-title focusable=true>
+        <v-expansion-panel-title focusable="true">
           <span style="user-select: all">Transaction id: {{ transactionData.txid }}</span>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="open-detail-button"
+            @click.stop="openInNewTab(transactionData.txid)"
+            >Open detail</v-btn
+          >
         </v-expansion-panel-title>
         <v-expansion-panel-text>
           <div v-if="Object.keys(transactionData).length > 0">
@@ -51,12 +66,19 @@ const componentStyle = computed(() => {
               </v-col>
             </v-row>
             <h4>Inputs</h4>
-            <ul style="list-style-type: none;">
+            <ul style="list-style-type: none">
               <li v-for="(input, index) in transactionData.vin" :key="index">
                 <v-expansion-panels>
                   <v-expansion-panel>
-                    <v-expansion-panel-title focusable=true>
+                    <v-expansion-panel-title focusable="true">
                       <p>Transaction id: {{ input.txid }}</p>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        class="open-detail-button"
+                        @click.stop="openInNewTab(input.txid)"
+                        >Open detail</v-btn
+                      >
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
                       <v-row>
@@ -80,14 +102,12 @@ const componentStyle = computed(() => {
                       </div>
                       <v-expansion-panels v-if="input.witness && input.witness.length > 0">
                         <v-expansion-panel>
-                          <v-expansion-panel-title focusable=true>
+                          <v-expansion-panel-title focusable="true">
                             Raw witness
                           </v-expansion-panel-title>
                           <v-expansion-panel-text>
-                            <div
-                              class="witness-box"
-                            >
-                              <ul style="list-style-type: none;">
+                            <div class="witness-box">
+                              <ul style="list-style-type: none">
                                 <li v-for="(item, wIndex) in input.witness" :key="wIndex">
                                   <code>{{ item === '' ? '00' : item }}</code>
                                 </li>
@@ -116,17 +136,15 @@ const componentStyle = computed(() => {
   </div>
 </template>
 
+<script>
+function openInNewTab(txid) {
+  const url = fetchTransactionURL(txid)
+  const win = window.open(url, '_blank')
+  win.focus()
+}
+</script>
+
 <style scoped>
-.transaction-info {
-  margin-top: 20px;
-  padding: 5px;
-}
-
-.v-expansion-panel {
-  margin-top: 15px;
-  margin-bottom: 15px;
-}
-
 .v-expansion-panel-title {
   overflow-x: auto;
 }
@@ -163,5 +181,29 @@ li {
 .witness-box code {
   font-family: monospace;
   word-break: keep-all;
+}
+
+.transaction-info {
+  padding: 10px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.funding-transaction {
+  background-color: rgb(var(--v-theme-funding_background));
+}
+
+.prover-transaction {
+  margin-right: 60px;
+  background-color: rgb(var(--v-theme-prover_background));
+}
+
+.verifier-transaction {
+  margin-left: 60px;
+  background-color: rgb(var(--v-theme-verifier_background));
+}
+
+.open-detail-button {
+  margin-right: 20px;
 }
 </style>
