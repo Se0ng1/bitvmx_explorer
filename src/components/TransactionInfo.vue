@@ -43,7 +43,7 @@ const componentStyle = computed(() => {
           <span style="user-select: all">Transaction id: {{ transactionData.txid }}</span>
           <v-spacer></v-spacer>
           <v-btn
-            color="primary"
+            variant="text"
             class="open-detail-button"
             @click.stop="openInNewTab(transactionData.txid)"
             >Open detail</v-btn
@@ -74,7 +74,7 @@ const componentStyle = computed(() => {
                       <p>Transaction id: {{ input.txid }}</p>
                       <v-spacer></v-spacer>
                       <v-btn
-                        color="primary"
+                        variant="text"
                         class="open-detail-button"
                         @click.stop="openInNewTab(input.txid)"
                         >Open detail</v-btn
