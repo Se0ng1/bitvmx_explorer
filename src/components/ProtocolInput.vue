@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch, defineEmits } from 'vue' // Added watch import
+import { ref, onMounted, watch } from 'vue' // Added watch import
 import { fetchProtocolData } from '@/lib/transactions'
 import { useTransactionStore } from '@/stores/transactions'
 import { useNetworkStore } from '@/stores/network' // Import the network store
