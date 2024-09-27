@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue'
 import WitnessInfo from './WitnessInfo.vue'
 import { fetchTransactionURL } from '@/lib/transactions'
+import CryptoJS from 'crypto-js'
 
 const props = defineProps({
   transactionData: {
@@ -13,6 +14,11 @@ const props = defineProps({
     required: false,
     default: null,
     validator: (value) => value === 0 || value === 1 || value === null
+  },
+  index: {
+    type: Number,
+    required: false,
+    default: null
   }
 })
 
@@ -33,6 +39,22 @@ const componentStyle = computed(() => {
         : 'verifier-transaction'
   return { class: className }
 })
+
+const hashCalculatorDialog = ref(false)
+const hashInput = ref('')
+
+const openHashCalculatorDialog = () => {
+  hashCalculatorDialog.value = true
+}
+
+const calculateHash = () => {
+  // Assuming there's a function to calculate the hash based on the input
+  // This is a placeholder for the actual hash calculation logic
+  console.log(`Calculating hash for input: ${hashInput.value}`)
+  hashInput.value = CryptoJS.enc.Hex.stringify(
+    CryptoJS.RIPEMD160(CryptoJS.SHA256(CryptoJS.enc.Hex.parse(hashInput.value)))
+  )
+}
 </script>
 
 <template>
@@ -40,7 +62,10 @@ const componentStyle = computed(() => {
     <v-expansion-panels>
       <v-expansion-panel>
         <v-expansion-panel-title focusable="true">
-          <span style="user-select: all">Transaction id: {{ transactionData.txid }}</span>
+          <span style="user-select: all"
+            >Transaction id {{ props.index !== null ? ` ${props.index + 1}` : '' }}:
+            {{ transactionData.txid }}</span
+          >
           <v-spacer></v-spacer>
           <v-btn
             variant="text"
@@ -103,7 +128,13 @@ const componentStyle = computed(() => {
                       <v-expansion-panels v-if="input.witness && input.witness.length > 0">
                         <v-expansion-panel>
                           <v-expansion-panel-title focusable="true">
-                            Raw witness
+                            Raw witness<v-spacer></v-spacer
+                            ><v-btn
+                              variant="text"
+                              class="open-detail-button"
+                              @click.stop="openHashCalculatorDialog"
+                              >Open hash calculator</v-btn
+                            >
                           </v-expansion-panel-title>
                           <v-expansion-panel-text>
                             <div class="witness-box">
@@ -134,6 +165,31 @@ const componentStyle = computed(() => {
       </v-expansion-panel>
     </v-expansion-panels>
   </div>
+  <v-dialog v-model="hashCalculatorDialog" max-width="500">
+    <v-card>
+      <v-card-title>Hash Calculator</v-card-title>
+      <v-card-text>
+        <v-text-field
+          v-model="hashInput"
+          label="Input for hash calculation"
+          hide-details=""
+        ></v-text-field>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn class="dialog-button" color="primary" variant="flat" @click="calculateHash"
+          >Calculate Hash</v-btn
+        >
+        <v-spacer></v-spacer>
+        <v-btn
+          class="dialog-button"
+          color="text"
+          variant="flat"
+          @click="hashCalculatorDialog = false"
+          >Close</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script>
@@ -205,5 +261,9 @@ li {
 
 .open-detail-button {
   margin-right: 20px;
+}
+
+.dialog-button {
+  margin: 15px;
 }
 </style>

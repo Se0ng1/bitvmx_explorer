@@ -40,6 +40,7 @@
         :key="index"
         :transactionData="transaction"
         :position="index % 2"
+        :index="index"
       />
     </template>
   </div>
