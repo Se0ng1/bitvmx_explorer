@@ -1,11 +1,15 @@
 <template>
   <v-app-bar>
-    <img src="@/assets/bitvmx.jpg" alt="BitVMX Logo" class="logo" />
+    <RouterLink to="/">
+      <img src="@/assets/bitvmx.jpg" alt="BitVMX Logo" class="logo" />
+    </RouterLink>
     <v-toolbar-title>BitVMX explorer</v-toolbar-title>
     <v-spacer></v-spacer>
     <div class="nav-links">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/protocol">Protocol</RouterLink>
+      <RouterLink to="/" :class="{ 'router-link-active': $route.path === '/' }">Home</RouterLink>
+      <RouterLink to="/protocol" :class="{ 'router-link-active': $route.path === '/protocol' }"
+        >Protocol</RouterLink
+      >
     </div>
     <div class="nav-dark-toggle">
       <DarkModeToggle />
@@ -15,6 +19,9 @@
 
 <script setup>
 import DarkModeToggle from './DarkModeToggle.vue'
+import { useRoute } from 'vue-router'
+
+const $route = useRoute()
 </script>
 
 <style scoped lang="sass">
@@ -43,6 +50,8 @@ import DarkModeToggle from './DarkModeToggle.vue'
     color: var(--v-theme-on-background)
     font-weight: 500
     &:hover
+      color: rgba(25, 118, 210, 1)
+    &.router-link-active
       color: rgba(25, 118, 210, 1)
 
 .network-dropdown
