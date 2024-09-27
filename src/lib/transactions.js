@@ -29,7 +29,11 @@ const loadNetworkFunctions = async () => {
   }
 }
 
-await loadNetworkFunctions() // Load the appropriate network functions
+loadNetworkFunctions().then(() => {
+  console.log('Network functions loaded');
+}).catch((error) => {
+  console.error('Error loading network functions:', error);
+});
 
 export const fetchTransactionData = async (txid) => {
   // Call the appropriate network implementation
