@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import WitnessInfo from './WitnessInfo.vue'
+import { fetchTransactionURL } from '@/lib/transactions'
 
 const props = defineProps({
   transactionData: {
@@ -40,6 +41,13 @@ const componentStyle = computed(() => {
       <v-expansion-panel>
         <v-expansion-panel-title focusable="true">
           <span style="user-select: all">Transaction id: {{ transactionData.txid }}</span>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="primary"
+            class="open-detail-button"
+            @click.stop="openInNewTab(transactionData.txid)"
+            >Open detail</v-btn
+          >
         </v-expansion-panel-title>
         <v-expansion-panel-text>
           <div v-if="Object.keys(transactionData).length > 0">
@@ -64,6 +72,13 @@ const componentStyle = computed(() => {
                   <v-expansion-panel>
                     <v-expansion-panel-title focusable="true">
                       <p>Transaction id: {{ input.txid }}</p>
+                      <v-spacer></v-spacer>
+                      <v-btn
+                        color="primary"
+                        class="open-detail-button"
+                        @click.stop="openInNewTab(input.txid)"
+                        >Open detail</v-btn
+                      >
                     </v-expansion-panel-title>
                     <v-expansion-panel-text>
                       <v-row>
@@ -120,6 +135,14 @@ const componentStyle = computed(() => {
     </v-expansion-panels>
   </div>
 </template>
+
+<script>
+function openInNewTab(txid) {
+  const url = fetchTransactionURL(txid)
+  const win = window.open(url, '_blank')
+  win.focus()
+}
+</script>
 
 <style scoped>
 .v-expansion-panel-title {
@@ -178,5 +201,9 @@ li {
 .verifier-transaction {
   margin-left: 60px;
   background-color: rgb(var(--v-theme-verifier_background));
+}
+
+.open-detail-button {
+  margin-right: 20px;
 }
 </style>

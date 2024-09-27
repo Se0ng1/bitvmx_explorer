@@ -8,7 +8,7 @@ export const fetchTransactionData = async (txid) => {
       Accept: 'application/json, text/plain, */*'
     }
   })
-  await new Promise((resolve) => setTimeout(resolve, 300))
+  await new Promise((resolve) => setTimeout(resolve, 700))
   return response.data
 }
 
@@ -20,6 +20,10 @@ export const fetchAddressData = async (txid, address) => {
     },
     mode: 'cors'
   })
-  await new Promise((resolve) => setTimeout(resolve, 300))
+  await new Promise((resolve) => setTimeout(resolve, 700))
   return response.data.filter((item) => item.vin[0].txid === txid)[0] || null
+}
+
+export const fetchTransactionURL = (txid) => {
+  return `https://mempool.space/tx/${txid}`
 }

@@ -19,3 +19,7 @@ export const fetchAddressData = async (txid, address) => {
   })
   return response.data.filter((item) => item.vin[0].txid === txid)[0] || null
 }
+
+export const fetchTransactionURL = (txid) => {
+  return `https://mutinynet.com/tx/${txid}`
+}

@@ -9,7 +9,7 @@ const props = defineProps({
   }
 })
 
-const publicKeys = ref([])
+const signatures = ref([])
 const code = ref('')
 const controlBlock = ref()
 const winternitzValues = ref([])
@@ -42,7 +42,7 @@ const processWitness = () => {
     witness = witness.slice(init.length, witness.length)
   } else {
     signatures.value = end
-    witness = witness.slice(0, witness.length - 1 - end.length)
+    witness = witness.slice(0, witness.length - end.length)
   }
   winternitzValues.value = witness
 }

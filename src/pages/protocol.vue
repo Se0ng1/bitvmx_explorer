@@ -15,6 +15,7 @@
       </v-col>
     </v-row>
     <ProtocolInput @submit="handleProtocolSubmit" @clear="clearTransactionData" />
+
     <template v-if="transactionData && transactionData.length > 0">
       <v-row>
         <v-col cols="12" md="4">
@@ -49,7 +50,7 @@ import { ref, onMounted } from 'vue'
 import ProtocolInput from '@/components/ProtocolInput.vue'
 import TransactionInfo from '@/components/TransactionInfo.vue'
 import { useNetworkStore } from '@/stores/network'
-import { useRouter } from 'vue-router' // Import the router
+import { useRouter } from 'vue-router'
 
 const networkStore = useNetworkStore()
 const router = useRouter() // Initialize the router
@@ -106,5 +107,11 @@ const setNetwork = (network) => {
 
 h1 {
   margin-bottom: 20px;
+}
+
+.empty-txid-message {
+  color: red; /* Change to your preferred color */
+  text-align: center;
+  margin-top: 20px;
 }
 </style>
