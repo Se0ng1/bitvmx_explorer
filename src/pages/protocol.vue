@@ -47,21 +47,27 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import ProtocolInput from '@/components/ProtocolInput.vue'
 import TransactionInfo from '@/components/TransactionInfo.vue'
 import { useNetworkStore } from '@/stores/network'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 
 const networkStore = useNetworkStore()
-const router = useRouter() // Initialize the router
+const router = useRouter()
+const route = useRoute()
 
 const transactionData = ref(null)
 const selectedNetwork = ref('')
 
 onMounted(() => {
-  const savedNetworkId = networkStore.networkId || 'mutinynet'
-  selectedNetwork.value = savedNetworkId
+  const networkParam = route.query.network
+  if (networkParam && ['mainnet', 'testnet', 'mutinynet'].includes(networkParam)) {
+    setNetwork(networkParam)
+  } else {
+    const savedNetworkId = networkStore.networkId || 'mutinynet'
+    selectedNetwork.value = savedNetworkId
+  }
 })
 
 const networks = ['mainnet', 'testnet', 'mutinynet']
@@ -71,13 +77,23 @@ const handleProtocolSubmit = (data) => {
 }
 
 const clearTransactionData = () => {
-  transactionData.value = null // Clear transactionData when clear event is emitted
+  transactionData.value = null
 }
 
 const setNetwork = (network) => {
   networkStore.setNetworkId(network)
-  router.go(0)
+  selectedNetwork.value = network
+  router.replace({ query: { ...route.query, network } })
 }
+
+watch(
+  () => route.query.network,
+  (newNetwork) => {
+    if (newNetwork && ['mainnet', 'testnet', 'mutinynet'].includes(newNetwork)) {
+      setNetwork(newNetwork)
+    }
+  }
+)
 </script>
 
 <style scoped>

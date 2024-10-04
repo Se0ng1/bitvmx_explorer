@@ -51,8 +51,10 @@ onMounted(() => {
 // Watch for network changes and reset txId
 watch(
   () => networkStore.networkId,
-  () => {
+  (newNetwork) => {
     transactionStore.setTxId('') // Clear the transaction ID when network changes
+    inputValue.value = '' // Clear the input value
+    emit('clear') // Emit clear event to reset transactionData in the parent component
   }
 )
 </script>
