@@ -7,14 +7,14 @@ let fetchTransactionURLAPI
 const networkStore = useNetworkStore() // Create an instance of the network store
 const currentNetwork = networkStore.networkId // Access the networkId from the store
 
-const loadNetworkFunctions = async () => {
-  if (currentNetwork === 'mainnet') {
+const loadNetworkFunctions = async (networkId) => {
+  if (networkId === 'mainnet') {
     // Import mainnet functions
     const mainnet = await import('./networkTransactions/mainnet')
     fetchTransactionDataAPI = mainnet.fetchTransactionData
     fetchAddressDataAPI = mainnet.fetchAddressData
     fetchTransactionURLAPI = mainnet.fetchTransactionURL
-  } else if (currentNetwork === 'testnet') {
+  } else if (networkId === 'testnet') {
     // Import testnet functions
     const testnet = await import('./networkTransactions/testnet')
     fetchTransactionDataAPI = testnet.fetchTransactionData
@@ -28,14 +28,6 @@ const loadNetworkFunctions = async () => {
     fetchTransactionURLAPI = mutinynet.fetchTransactionURL
   }
 }
-
-loadNetworkFunctions()
-  .then(() => {
-    console.log('Network functions loaded')
-  })
-  .catch((error) => {
-    console.error('Error loading network functions:', error)
-  })
 
 export const fetchTransactionData = async (txid) => {
   // Call the appropriate network implementation
@@ -69,4 +61,9 @@ export const fetchProtocolData = async (txid) => {
     }
   }
   return initialArray
+}
+
+export const updateNetwork = async (newNetworkId) => {
+  await loadNetworkFunctions(newNetworkId)
+  console.log(`Network functions updated for ${newNetworkId}`)
 }

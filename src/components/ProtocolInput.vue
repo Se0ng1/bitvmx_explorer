@@ -4,9 +4,16 @@ import { fetchProtocolData } from '@/lib/transactions'
 import { useTransactionStore } from '@/stores/transactions'
 import { useNetworkStore } from '@/stores/network' // Import the network store
 
+const props = defineProps({
+  transactionId: {
+    type: String,
+    default: ''
+  }
+})
+
 const transactionStore = useTransactionStore()
 const networkStore = useNetworkStore() // Access the network store
-const inputValue = ref(transactionStore.txId) // Initialize with the store value
+const inputValue = ref(props.transactionId || transactionStore.txId) // Initialize with prop or store value
 const errorMessage = ref('')
 const isLoading = ref(false) // Loading state
 const emit = defineEmits(['submit', 'clear']) // Added 'clear' event
@@ -45,7 +52,11 @@ const setTransactionId = (txid) => {
 
 // Keep the onMounted behavior
 onMounted(() => {
-  inputValue.value = transactionStore.txId // Set inputValue to the transaction ID on mount
+  if (props.transactionId) {
+    setTransactionId(props.transactionId)
+  } else {
+    inputValue.value = transactionStore.txId // Set inputValue to the transaction ID on mount
+  }
 })
 
 // Watch for network changes and reset txId
@@ -55,6 +66,16 @@ watch(
     transactionStore.setTxId('') // Clear the transaction ID when network changes
     inputValue.value = '' // Clear the input value
     emit('clear') // Emit clear event to reset transactionData in the parent component
+  }
+)
+
+// Watch for changes in the transactionId prop
+watch(
+  () => props.transactionId,
+  (newTransactionId) => {
+    if (newTransactionId && newTransactionId !== inputValue.value) {
+      setTransactionId(newTransactionId)
+    }
   }
 )
 </script>

@@ -66,7 +66,7 @@ onMounted(() => {
     setNetwork(networkParam)
   } else {
     const savedNetworkId = networkStore.networkId || 'mutinynet'
-    selectedNetwork.value = savedNetworkId
+    setNetwork(savedNetworkId)
   }
 })
 
