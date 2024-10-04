@@ -14,7 +14,11 @@
         />
       </v-col>
     </v-row>
-    <ProtocolInput @submit="handleProtocolSubmit" @clear="clearTransactionData" />
+    <ProtocolInput
+      :transactionId="transactionId"
+      @submit="handleProtocolSubmit"
+      @clear="clearTransactionData"
+    />
 
     <template v-if="transactionData && transactionData.length > 0">
       <v-row>
@@ -52,6 +56,7 @@ import ProtocolInput from '@/components/ProtocolInput.vue'
 import TransactionInfo from '@/components/TransactionInfo.vue'
 import { useNetworkStore } from '@/stores/network'
 import { useRouter, useRoute } from 'vue-router'
+import { updateNetwork } from '@/lib/transactions'
 
 const networkStore = useNetworkStore()
 const router = useRouter()
@@ -59,14 +64,21 @@ const route = useRoute()
 
 const transactionData = ref(null)
 const selectedNetwork = ref('')
+const transactionId = ref('')
 
-onMounted(() => {
+onMounted(async () => {
   const networkParam = route.query.network
+  const txIdParam = route.query.txid
+
   if (networkParam && ['mainnet', 'testnet', 'mutinynet'].includes(networkParam)) {
-    setNetwork(networkParam)
+    await setNetwork(networkParam)
   } else {
     const savedNetworkId = networkStore.networkId || 'mutinynet'
-    setNetwork(savedNetworkId)
+    await setNetwork(savedNetworkId)
+  }
+
+  if (txIdParam && typeof txIdParam === 'string') {
+    transactionId.value = txIdParam
   }
 })
 
@@ -80,7 +92,8 @@ const clearTransactionData = () => {
   transactionData.value = null
 }
 
-const setNetwork = (network) => {
+const setNetwork = async (network) => {
+  await updateNetwork(network)
   networkStore.setNetworkId(network)
   selectedNetwork.value = network
   router.replace({ query: { ...route.query, network } })
@@ -88,9 +101,9 @@ const setNetwork = (network) => {
 
 watch(
   () => route.query.network,
-  (newNetwork) => {
+  async (newNetwork) => {
     if (newNetwork && ['mainnet', 'testnet', 'mutinynet'].includes(newNetwork)) {
-      setNetwork(newNetwork)
+      await setNetwork(newNetwork)
     }
   }
 )
