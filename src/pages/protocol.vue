@@ -14,7 +14,11 @@
         />
       </v-col>
     </v-row>
-    <ProtocolInput @submit="handleProtocolSubmit" @clear="clearTransactionData" />
+    <ProtocolInput
+      :transactionId="transactionId"
+      @submit="handleProtocolSubmit"
+      @clear="clearTransactionData"
+    />
 
     <template v-if="transactionData && transactionData.length > 0">
       <v-row>
@@ -47,37 +51,78 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import ProtocolInput from '@/components/ProtocolInput.vue'
 import TransactionInfo from '@/components/TransactionInfo.vue'
 import { useNetworkStore } from '@/stores/network'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { updateNetwork } from '@/lib/transactions'
 
 const networkStore = useNetworkStore()
-const router = useRouter() // Initialize the router
+const router = useRouter()
+const route = useRoute()
 
 const transactionData = ref(null)
 const selectedNetwork = ref('')
+const transactionId = ref('')
 
-onMounted(() => {
-  const savedNetworkId = networkStore.networkId || 'mutinynet'
-  selectedNetwork.value = savedNetworkId
+onMounted(async () => {
+  const networkParam = route.query.network
+  const txIdParam = route.query.txid
+
+  if (networkParam && ['mainnet', 'testnet', 'mutinynet'].includes(networkParam)) {
+    await setNetwork(networkParam)
+  } else {
+    const savedNetworkId = networkStore.networkId || 'mutinynet'
+    await setNetwork(savedNetworkId)
+  }
+
+  if (txIdParam && typeof txIdParam === 'string') {
+    transactionId.value = txIdParam
+  }
 })
 
 const networks = ['mainnet', 'testnet', 'mutinynet']
 
+const updateQueryParams = () => {
+  const query = { network: selectedNetwork.value }
+  if (transactionData.value !== null && transactionData.value !== '') {
+    query['txid'] = transactionData.value[0]['txid']
+  } else if (transactionId.value !== null && transactionId.value !== '') {
+    query['txid'] = transactionId.value
+  }
+  router.replace({ query })
+}
+
 const handleProtocolSubmit = (data) => {
   transactionData.value = data
+  if (data && data.length > 0) {
+    const txid = data[0].txid
+    updateQueryParams()
+  }
 }
 
 const clearTransactionData = () => {
-  transactionData.value = null // Clear transactionData when clear event is emitted
+  transactionData.value = null
+  const { txid, ...restQuery } = route.query
+  updateQueryParams()
 }
 
-const setNetwork = (network) => {
+const setNetwork = async (network) => {
+  await updateNetwork(network)
   networkStore.setNetworkId(network)
-  router.go(0)
+  selectedNetwork.value = network
+  updateQueryParams()
 }
+
+watch(
+  () => route.query.network,
+  async (newNetwork) => {
+    if (newNetwork && ['mainnet', 'testnet', 'mutinynet'].includes(newNetwork)) {
+      await setNetwork(newNetwork)
+    }
+  }
+)
 </script>
 
 <style scoped>
