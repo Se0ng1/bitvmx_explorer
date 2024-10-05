@@ -84,19 +84,35 @@ onMounted(async () => {
 
 const networks = ['mainnet', 'testnet', 'mutinynet']
 
+const updateQueryParams = () => {
+  const query = { network: selectedNetwork.value }
+  if (transactionData.value !== null && transactionData.value !== '') {
+    query['txid'] = transactionData.value[0]['txid']
+  } else if (transactionId.value !== null && transactionId.value !== '') {
+    query['txid'] = transactionId.value
+  }
+  router.replace({ query })
+}
+
 const handleProtocolSubmit = (data) => {
   transactionData.value = data
+  if (data && data.length > 0) {
+    const txid = data[0].txid
+    updateQueryParams()
+  }
 }
 
 const clearTransactionData = () => {
   transactionData.value = null
+  const { txid, ...restQuery } = route.query
+  updateQueryParams()
 }
 
 const setNetwork = async (network) => {
   await updateNetwork(network)
   networkStore.setNetworkId(network)
   selectedNetwork.value = network
-  router.replace({ query: { ...route.query, network } })
+  updateQueryParams()
 }
 
 watch(
