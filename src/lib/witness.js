@@ -62,7 +62,7 @@ export const computeWinternitzWord = (digits, d0) => {
     (checksumValue != computedChecksum && amountOfDigitsChecksum <= valueDigits.length)
   )
   if (checksumValue === computedChecksum) {
-    return fromHexArrayToHex(valueDigits, digitLength)
+    return fromHexArrayToHex(valueDigits.reverse(), digitLength)
   } else {
     return null
   }
