@@ -50,6 +50,23 @@
           append-icon="mdi-open-in-new"
           class="py-4"
           color="surface-variant"
+          href="https://bitvmx.org/knowledge/zero-knowledge-proof-verification-on-bitcoin"
+          prepend-icon="mdi-newspaper"
+          rel="noopener noreferrer"
+          rounded="lg"
+          subtitle="Martin Jonas"
+          target="_blank"
+          title="Zero knowledge proof verification on Bitcoin"
+          variant="text"
+        >
+          <v-overlay opacity=".06" scrim="primary" contained model-value persistent />
+        </v-card>
+      </v-col>
+      <v-col cols="12">
+        <v-card
+          append-icon="mdi-open-in-new"
+          class="py-4"
+          color="surface-variant"
           href="https://bitvmx.org/knowledge/optimizing-algorithms-for-bitcoin-script"
           prepend-icon="mdi-newspaper"
           rel="noopener noreferrer"
