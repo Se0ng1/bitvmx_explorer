@@ -4,6 +4,6 @@ This is a simple frontend designed to easily explore BitVMX protocols along bitc
 
 ---
 ## Useage
-1. chmod +x setup.sh
-2. ./setup.sh
-3. npm run dev
+1. `chmod +x setup.sh`
+2. `./setup.sh`
+3. `npm run dev`
