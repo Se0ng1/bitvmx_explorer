@@ -63,7 +63,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    https: true,
+    https: false,
     proxy: {
       '/regtest-rpc': {
         target: 'http://localhost:8443',  // Changed to 8443 for Docker container
